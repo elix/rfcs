@@ -115,4 +115,4 @@ feature should have a core team champion, who will represent the feature and its
 progress.
 
 
-**Elix's RFC process is modeled after that for Elix.js and Rust.**
+Elix's RFC process was inspired by that used by Ember.js and Rust.
