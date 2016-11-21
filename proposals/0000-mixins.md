@@ -7,8 +7,8 @@
 
 This proposes that the project agree upon functional mixins as our standard way
 to share aspects of behavior and public APIs across our components. Functional
-mixins take the form of a function that takes a class argument and returns an
-extended class implementing the mixin's functionality:
+mixins take the form of a plain JavaScript function that takes a class argument
+and returns an extended class implementing the mixin's functionality:
 
     const MyMixin = (base) => class MyMixin extends base {
       // Mixin defines properties and methods here.
@@ -17,25 +17,28 @@ extended class implementing the mixin's functionality:
       }
     };
 
+A mixin is applied simply by invoking the mixin as a function, typically
+in the process of defining a class. In the case of mixins for web components,
+the base class could be HTMLElement:
+
     class MyElement extends MyMixin(HTMLElement) {}
-
     let obj = new MyElement();
-    obj.greet(); // Hello
+    obj.greet(); // "Hello"
 
 
-# Motivation and use cases
+# Motivation and goals
 
 Web components often share aspects of behavior and public API. For example, many
 components support the notion of single selection, where the user can pick at
 most one item from the component's children. It is advantageous to implement
-such behavior in a reusable fashion at the level smaller than that of a complete
+such behavior in a reusable fashion at the level below that of a complete
 component. This allows for implementation to be shared, and for developers to
 interact with a more consistent component API.
 
 Many UI component frameworks mixins, but differences in implementation can
-increase  learning costs and hinder reuse. Functional mixins provide a greater
+increase learning costs and hinder reuse. Functional mixins provide a greater
 degree of interoperability. They directly leverage the JavaScript prototype
-chain, and so can be used in a variety of ways, and with a variety of base
+chain, and so can be used in a variety of ways and with a variety of base
 classes.
 
 Design goals:
@@ -43,36 +46,14 @@ Design goals:
 1. **Allow mixins that can focus on a single, common component task.**
    Each mixin should be useful on its own, or in combination.
 2. **Introduce as few new concepts as possible.**
-   A developer who understands the DOM API should be able to work with these
-   mixins without having to substantially change the way they write code. They
-   shouldn't have to learn anything new beyond the concept of defining a mixin
-   as a function.
+   A developer who understands JavaScript and the DOM API should be able to work
+   with these mixins without having to substantially change the way they write
+   code. They shouldn't have to learn anything new beyond the concept of
+   defining a mixin as a function.
 3. **Assume native browser support for ES6 and web components.**
    The architecture should feel correct in a future world in which native ES6
    and web components are everywhere, but also be usable in older ES5 browsers
    and with polyfills.
-
-Use cases for functional mixins for web components:
-
-* Template stamping. Components often want to create a new shadow root in their
-  constructor and clone a template into it. Since this behavior is fairly simple
-  and consistent, the developer would like a mixin to handle this.
-* Attribute marshalling. A component would like to implement a default
-  `attributeChangedCallback` to marshall hyphenated `foo-bar` attributes to
-  the corresponding camelCase `fooBar` properties.
-* Single selection. A component would like to implement standard single-selection
-  semantics, with a `selectedItem` property, `selectNext`/`selectPrevious`
-  methods, a `selected-item-changed` event, and so on.
-* ARIA list semantics. A component that supports selection (above) would like to
-  go further and expose the currently selected item via ARIA attributes to make
-  the component accessible to users of, e.g., screen readers.
-
-These mixins can be applied directly to the standard `HTMLElement` class if a
-developer wants to work directly on top of the platform. These mixins are also
-designed to be used with base classes from web component frameworks.
-Significantly, this functional mixin approach is consistent with that adopted by
-Google's Polymer team for their future releases. Polymer's earlier, proprietary
-"behaviors" is being replaced with mixins such as those described here.
 
 This mixin strategy is designed to mitigate common problems with earlier mixin
 approaches, for example the mixin approach which is now  
@@ -92,27 +73,54 @@ mixins:
    names, to access properties and methods that do not need to be exposed in the
    public API.
 
+Non-goals:
+
 While this mixin strategy is sufficiently general to be of interest to problem
 domains outside of web component creation, this plan is focused on the needs of
 creating web components in the context of the Elix project. Theoretical
 weaknesses in this mixin strategy may be acceptable if they are not likely to
-come into play in creating Elix components.
+come into play in creating web components like those in the Elix project.
 
-The expected outcome of this design:
+Desired outcomes:
 
 * The creation of a well-factored collection of mixins for all behavior aspects
   shared across Elix project components. Most of the components will be
   primarily comprised of mixins, with very little code required to define the
   final, instantiable custom element.
 * A developer that wants to use an Elix component, but does *not* want some
-  aspect of its behavior, can create a new component that uses the same set of
+  aspect of its behavior, can create a new component using the same set of
   mixins as the original, minus the mixin(s) they want to leave out. This
   provides a critical degree of flexibility for Elix users.
 * The same mixins can be used by developers on other projects to help them
-  create components which meet the Gold Standard. They can use the mixins in
-  "plain JavaScript", or with  any framework that permits the creation of web
-  components in JavaScript using `class` syntax. The mixins permit a
-  pay-as-you-go approach to web component complexity and performance.
+  create proprietary components which also meet the Gold Standard. They can use
+  the mixins in vanilla JavaScript, or with any framework that permits the
+  creation of web components in JavaScript using `class` syntax. The mixins
+  enable a pay-as-you-go approach to web component complexity and performance.
+
+
+# Use cases
+
+Use cases for functional mixins for web components:
+
+* Template stamping. Components often want to create a new shadow root in their
+  constructor and clone a template into it. Since this behavior is fairly simple
+  and consistent, the developer would like a mixin to handle this.
+* Attribute marshalling. A component would like to implement a default
+  `attributeChangedCallback` to marshall hyphenated `foo-bar` attributes to
+  the corresponding camelCase `fooBar` properties.
+* Single selection. A component would like to implement standard single-selection
+  semantics, with a `selectedItem` property, `selectNext`/`selectPrevious`
+  methods, a `selected-item-changed` event, and so on.
+* ARIA list semantics. A component that supports singl selection (above) would
+  like to go further and expose the currently selected item via ARIA attributes
+  to make the component accessible to users of, e.g., screen readers.
+
+These mixins can be applied directly to the standard `HTMLElement` class if a
+developer wants to work directly on top of the platform. These mixins are also
+designed to be used with base classes from web component frameworks.
+Significantly, this functional mixin approach is consistent with that being
+adopted by Google's Polymer team for future releases. The mixins can be
+applied to the Polymer.Element base class when creating Polymer components.
 
 
 # Detailed design
@@ -120,25 +128,12 @@ The expected outcome of this design:
 ## Mixins as functions
 
 The mixins in this project all take the form of a function. Each function takes
-a base class and returns a subclass defining the desired features:
+a base class and returns a subclass defining the desired features.
 
-    const MyMixin = (base) => class MyMixin extends base {
-      // Mixin defines properties and methods here.
-      greet() {
-        return "Hello";
-      }
-    };
-
-    class MyBaseClass {}
-    const NewClass = MyMixin(MyBaseClass);
-
-    const obj = new NewClass();
-    obj.greet(); // "Hello"
-
-Many JavaScript mixin implementations destructively modify a class prototype,
-but mixins of the functional style shown above do not. Rather, functional mixins
-extend the prototype chain and return a new class. Such functions have been
-called "higher-order components", but we prefer the term "mixin" for brevity.
+Unlike many historical JavaScript mixin implementations, functional mixins do
+*not* destructively modify a class prototype. Rather, functional mixins extend
+the prototype chain and return a new class. Such functions have been called
+"higher-order components", but we prefer the term "mixin" for brevity.
 
 The mixins in this project take care to ensure that base class properties and
 methods are not broken by the mixin. In particular, if a mixin wants to add a
@@ -146,7 +141,7 @@ new property or method, it also invokes the base class' property or method. To
 do that consistently, these mixins follow standardized composition rules
 (below). Developers interested in creating their own component mixins may find
 it helpful to follow those guidelines to ensure that their mixins can
-interoperate cleanly with the ones in this project.
+interoperate cleanly with Elix mixins.
 
 A core virtue of a functional mixin is that you do not need to use any library
 to apply it. They're just functions, and be applied just by invoking them. This
@@ -432,21 +427,26 @@ happen after *all* prototypes along the chain have performed their `foo` work.
       }
     };
 
-Here, MyMixin can guarantee that all base classes further up the prototype chain
-have finished doing their `foo` work, because MyMixin explicitly calls
+Here, MyMixin can guarantee that all base classes further *up* the prototype
+chain have finished doing their `foo` work, because MyMixin explicitly calls
 `super.foo()`. However, prototypes further *down* on the prototype chain — that
 is, mixins applied after MyMixin, or subclasses otherwise extending this chain —
 may still have `foo` work to perform.
+
+This situation has not come up often in practice. When it has, we have found
+that the simplest solution may to be enqueue a microtask:
 
     const MyMixin = (base) => class MyMixin extends base {
       foo() {
         if (super.foo) { super.foo(); }
         Promise.resolve().then(() =>
-          // All prototypes on the chain will have finished executing their
-          // synchronous foo implementations by this point.
+          // All prototypes up and down the prototype chain will have finished
+          // executing their synchronous `foo` implementations by this point.
         );
       }
     };
+
+This has the advantage of simplicity, but gives up synchronicity.
 
 
 # Drawbacks
@@ -465,25 +465,32 @@ view of state. While Elix components are intended to be useful in FRP contexts
 like React as packaged implementations of user interface patterns, Elix mixins
 on their own are not designed to be applied to React component classes.
 
+As yet, we have not designed a means to ensure that a given mixin is only
+applied once along a given prototype chain. It is up to the component creator to
+ensure they don't inadvertently apply a mixin twice. That might not seem like a
+large problem, but it does limit the ability to compose aggregate mixins from
+smaller mixins. In practice, this generally means that the component create
+applies all mixins directly in the creation of the component class.
+
 
 # Alternatives
 
 This proposal was arrived at over the course of a year of experimentation
 looking for alternatives to monolithic UI component frameworks, in which a
 comparatively large base class delivers a wide range of component features. We
-believe that approach induces significant drag on the evolution of the
+believe a monolithic approach induces significant drag on the evolution of the
 framework, as future features inevitably run up against tightly-imposed
 constraints in property/method semantics, the ordering of effects, etc.
 
 Another approach would be to deliver all component services as helper functions
 that must manually invoked, rather than as extensions to a class. E.g., instead
 of offering a mixin to manage the semantics of single selection, each component
-that wanted to offer single selection would separate define the relevant API
-members, than manually invoke corresponding helper functions. Such an
-approach has some appeal, as it gives the component developer complete freedom
-to decide when and how to invoke the helper functions. On the downside, this
-leads to a more extreme degree of boilerplate code, and makes it harder to
-guarantee API consistency.
+that wanted to offer single selection would separately define the relevant API
+members, than manually invoke corresponding helper functions. Such an approach
+has some appeal, as it gives the component developer complete freedom to decide
+when and how to invoke the helper functions. On the downside, this leads to a
+more extreme degree of boilerplate code, and makes it harder to guarantee API
+consistency.
 
 
 # Unresolved questions
@@ -492,9 +499,9 @@ guarantee API consistency.
   and there is no standard for the timing of when the tree will be present.
   Some components call `attachShadowRoot` in their constructor, but Polymer 2.0
   components do that at a later point in time. That makes it hard to write
-  mixins that inspect or manipulate Shadow DOM. One solution would be for
-  the community to agree on the creation of a new *de facto* lifecycle callback
-  called, e.g., `shadowRootAttached`.
+  mixins that inspect or manipulate Shadow DOM during component creation. One
+  solution would be for the community to agree on the creation of a new *de
+  facto* lifecycle callback called, e.g., `shadowRootAttached`.
 
 * The section above on "Waiting for all prototypes to finish method invocation"
   makes recourse to microtasks as a solution. This feels somewhat unsatisfying.

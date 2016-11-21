@@ -6,11 +6,15 @@
 
 One paragraph explanation of the feature.
 
-# Motivation and use cases
+# Motivation and goals
 
-Why are we doing this?
+What forces are driving us to do this?
+What are our goals — and non-goals — for this?
+What are the desired outcomes?
+
+# Use cases
+
 What use cases does it support?
-What is the expected outcome?
 
 # Detailed design
 
