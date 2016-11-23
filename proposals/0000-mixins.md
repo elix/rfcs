@@ -35,11 +35,11 @@ such behavior in a reusable fashion at the level below that of a complete
 component. This allows for implementation to be shared, and for developers to
 interact with a more consistent component API.
 
-Many UI component frameworks mixins, but differences in implementation can
-increase learning costs and hinder reuse. Functional mixins provide a greater
-degree of interoperability. They directly leverage the JavaScript prototype
-chain, and so can be used in a variety of ways and with a variety of base
-classes.
+Many UI component frameworks support some form of mixin, but differences in
+implementation can increase learning costs and hinder reuse. Functional mixins
+provide a greater degree of interoperability. They directly leverage the
+JavaScript prototype chain, and so can be used in a variety of ways and with a
+variety of base classes.
 
 Design goals:
 
@@ -111,7 +111,7 @@ Use cases for functional mixins for web components:
 * Single selection. A component would like to implement standard single-selection
   semantics, with a `selectedItem` property, `selectNext`/`selectPrevious`
   methods, a `selected-item-changed` event, and so on.
-* ARIA list semantics. A component that supports singl selection (above) would
+* ARIA list semantics. A component that supports single selection (above) would
   like to go further and expose the currently selected item via ARIA attributes
   to make the component accessible to users of, e.g., screen readers.
 
@@ -144,8 +144,8 @@ it helpful to follow those guidelines to ensure that their mixins can
 interoperate cleanly with Elix mixins.
 
 A core virtue of a functional mixin is that you do not need to use any library
-to apply it. They're just functions, and be applied just by invoking them. This
-lets developers use these mixins with any conventional means of defining
+to apply it. They're just functions, and can be applied just by invoking them.
+This lets developers use these mixins with any conventional means of defining
 JavaScript classes — they don't have to invoke a proprietary class factory, nor
 do they have to load a separate framework or runtime.
 
@@ -417,8 +417,9 @@ See "Drawbacks" and "Unresolved questions".
 
 ## Waiting for all prototypes to finish method invocation
 
-Consider a mixin has a `foo` method, and would like to ensure that work will
-happen after *all* prototypes along the chain have performed their `foo` work.
+Consider a mixin that has a `foo` method, and would like to ensure that work
+will happen after *all* prototypes along the chain have performed their `foo`
+work.
 
     const MyMixin = (base) => class MyMixin extends base {
       foo() {
@@ -454,8 +455,8 @@ This has the advantage of simplicity, but gives up synchronicity.
 The relatively rare mixin ordering challenges described above are one drawback
 to this approach. Those ordering challenges could be mediated by recourse to an
 outside class factory that can try to resolve orderings. However, requiring use
-of such a class factor that would be a significant loss. It would impose a
-constraint on users of the mixins, and would effectively constituted a new
+of such a class factory would be a significant loss. It would impose a
+constraint on users of the mixins, and would effectively constitute a new
 component framework. This would undoubtedly make the project's mixins less
 attractive to a developer already using a component framework.
 
@@ -483,14 +484,14 @@ framework, as future features inevitably run up against tightly-imposed
 constraints in property/method semantics, the ordering of effects, etc.
 
 Another approach would be to deliver all component services as helper functions
-that must manually invoked, rather than as extensions to a class. E.g., instead
-of offering a mixin to manage the semantics of single selection, each component
-that wanted to offer single selection would separately define the relevant API
-members, than manually invoke corresponding helper functions. Such an approach
-has some appeal, as it gives the component developer complete freedom to decide
-when and how to invoke the helper functions. On the downside, this leads to a
-more extreme degree of boilerplate code, and makes it harder to guarantee API
-consistency.
+that must be invoked manually, rather than as extensions to a class. E.g.,
+instead of offering a mixin to manage the semantics of single selection, each
+component that wanted to offer single selection would separately define the
+relevant API members, than manually invoke corresponding helper functions. Such
+an approach has some appeal, as it gives the component developer complete
+freedom to decide when and how to invoke the helper functions. On the downside,
+this leads to a more extreme degree of boilerplate code, and makes it harder to
+guarantee API consistency.
 
 
 # Unresolved questions
