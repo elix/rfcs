@@ -61,9 +61,6 @@ defined here.
 ## The `items` collection
 
 `items`
-`itemsChanged`
-
-`items-changed` event
 
 ## The selected item
 
@@ -75,6 +72,12 @@ defined here.
 ## Requiring a selection
 
 `selectionRequired`
+
+## Tracking changes in `items`
+
+`itemsChanged`
+
+`items-changed` event
 
 ## Cursor operations
 
