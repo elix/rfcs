@@ -4,7 +4,8 @@
 
 # Summary
 
-One paragraph explanation of the feature.
+Concise (roughly one paragraph) explanation of the feature.
+Include a representative code snippet if it's short and self-explanatory.
 
 # Motivation and goals
 
