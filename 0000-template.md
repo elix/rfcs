@@ -7,11 +7,11 @@
 Concise (roughly one paragraph) explanation of the feature.
 Include a representative code snippet if it's short and self-explanatory.
 
-# Motivation and goals
+# Motivation
 
 What forces are driving us to do this?
-What are our goals — and non-goals — for this?
 What are the desired outcomes?
+What are *not* goals?
 
 # Use cases
 
