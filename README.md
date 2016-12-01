@@ -49,7 +49,7 @@ is 'active' and may be implemented with the goal of eventual inclusion
 into Elix.
 
 * Fork this RFC repo (http://github.com/Elix/rfcs).
-* Copy `0000-template.md` to `text/0000-my-feature.md` (where
+* Copy `0000-template.md` to `proposals/0000-my-feature.md` (where
   'my-feature' is descriptive. Do not assign an RFC number yet).
 * Fill in the RFC template. Put care into the details: **RFCs that do not
   present convincing motivation, demonstrate understanding of the impact of the
@@ -109,7 +109,7 @@ cannot determine if someone else is already working on it, feel free to ask
 
 ## Reviewing RFCs
 
-The core team reviews open RFC pull requests in its regular meetings, and
+The Elix core team reviews open RFC pull requests in its regular meetings, and
 reports the results of those discussion in its meeting notes. Every accepted
 feature should have a core team champion, who will represent the feature and its
 progress.
