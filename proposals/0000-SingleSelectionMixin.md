@@ -70,7 +70,7 @@ Non-goals:
 # Use cases
 
 `SingleSelectionMixin` is designed to support components that let the user
-select a single thing at a time. This is generally done to the user select
+select a single thing at a time. This is generally done to let the user select
 a value (e.g., as the target of an action, or in configuring something), or
 as a navigation construct (where only one page/mode is visible at a time).
 Examples:
@@ -176,7 +176,9 @@ get/set, and that are automatically kept in sync:
   `selected-item-changed` event.
 
 Updating one of these properties also updates the other, as shown in the first
-`SimpleList` example at the beginning of this document.
+`SimpleList` example at the beginning of this document. Setting either property
+will raise _both_ the `selected-index-changed` and `selected-item-changed`
+events.
 
 ### Updating the selection in response to `itemsChanged`
 
@@ -288,7 +290,7 @@ mixins.
 The primary concern with `SingleSelectionMixin` might be leveled against any
 other mixin we might begin with: that breaking component behaviors up into
 mixins might result in a complex, brittle, or unwieldy entanglements between
-mixins. However, given 1.5+ years of experience working with a mixin similar to
+mixins. However, 1.5+ years of experience working with a mixin similar to
 `SingleSelectionMixin` suggests that this approach is generally sound.
 
 
