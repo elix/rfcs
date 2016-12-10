@@ -580,6 +580,45 @@ ongoing performance testing will be critical in creating high-quality mixins and
 components for Elix.
 
 
+## Testing
+
+The entire point of mixins is to reuse functionality across components, so it's
+to everyone's benefit for mixins to be as well-tested as possible. Each mixin
+should have a reasonably complete suite of unit tests to exercise its
+functionality.
+
+Mixin unit tests should try to test the mixin in isolation, and avoid including
+other mixins or base classes. Typically, that means applying the mixin directly
+to `HTMLElement` to create a custom element class that can be used to create
+unit test fixtures. Example: suppose a simple mixin looks like:
+
+    const FooMixin = (base) => class Foo extends base {
+      get foo() {
+        return 'Hello';
+      }
+    }
+
+The unit tests for this mixin would typically look like:
+
+    class FooMixinElement extends FooMixin(HTMLElement) {}
+    const fixture = new FooMixinElement();
+    assert.equal(fixture.foo, 'Hello');
+
+In some cases, it may be expedient to use other mixins in constructing test
+fixtures, but over time, it is desirable to isolate which mixin each test
+exercises.
+
+Components that use multiple mixins can include tests that exercise the
+integration of those mixins. These should generally test the end-user visible
+interactions. E.g., if the
+[Sample Mixin-Based Component](http://jsbin.com/wikowa/edit?html,output)
+introduced above were a real component, one of its tests might simulate a click
+on a child, and then confirm that the selected class was ultimately applied to
+the clicked child. Such tests don't need to exhaustively duplicate everything
+tested in the mixin unit tests, but confirm that the component's basic
+functionality works as expected.
+
+
 # Drawbacks
 
 The relatively rare mixin ordering challenges referenced above are one drawback
