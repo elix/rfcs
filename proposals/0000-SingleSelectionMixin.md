@@ -156,8 +156,15 @@ to `slotchange` events on its slots:
 As noted earlier, handling distributed content changes is such a common need
 that it will be provided by another Elix mixin.
 
-The `SingleSelectionMixin` performs various checks to maintain a selection when
-`itemsChanged` is invoked; see below.
+When `itemsChanged` is invoked, `SingleSelectionMixin` performs several tasks:
+
+1. The mixin determines whether any items are new, and were added since the
+   last called to `itemsChanged`. For each new item, the mixin invokes a method
+   `itemAdded`, passing in the new item. This allows other mixins to perform
+   any per-item initialization. See the ARIA mixin example below in
+   "Per-item selection state".
+2. If the previously selected item has moved position in the set or has been
+   removed, the mixin attempts to preserve the selection; see below.
 
 
 ## The selected item
@@ -179,6 +186,55 @@ Updating one of these properties also updates the other, as shown in the first
 `SimpleList` example at the beginning of this document. Setting either property
 will raise _both_ the `selected-index-changed` and `selected-item-changed`
 events.
+
+# Per-item selection state.
+
+`SingleSelectionMixin` helps map a component's overall selection state (which
+item is selected?) to the selection states of individual items (is this item
+currently selected or not?). When the `selectedItem` property changes, the mixin
+invokes a method, `itemSelected` so that other mixins can update any per-item
+selection state. The `itemSelected` method will be invoked either once or twice:
+
+* If there had previously been a selection, the old item is passed to
+  `itemSelected` along with a value of `false` to indicate the item is no longer
+  selected.
+* If there is now a new selected item, the new item is passed to `itemSelected`
+  along with a value of `true` to indicate it is now selected.
+
+Example: A simple ARIA mixin could manage the `aria-selected` value for
+selected items.
+
+    import symbols from './symbols';
+
+    const SimpleAriaMixin = (base) => class SimpleAria extends base {
+
+      // Mark new items as unselected by default.
+      [symbols.itemAdded](item) {
+        item.setAttribute('aria-selected', false);
+      }
+
+      // Update the aria-selected attribute to reflect a change in item state.
+      [symbols.itemSelected](item, selected) {
+        item.setAttribute('aria-selected', selected);
+      }
+    }
+
+This mixin could then be combined with `SingleSelectionMixin` to map selection
+semantics to ARIA semantics:
+
+    class SimpleAriaList extends
+        SimpleAriaMixin(SingleSelectionMixin(HTMLElement)) {}
+
+    const list = new SimpleAriaList();
+    list.innerHTML = `
+      <div>Zero</div>
+      <div>One</div>
+      <div>Two</div>
+    `;
+    list.children[0].getAttribute('aria-selected') // "false"
+    list.selectedIndex = 0;
+    list.children[0].getAttribute('aria-selected') // "true"
+
 
 ### Updating the selection in response to `itemsChanged`
 
