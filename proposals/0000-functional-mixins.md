@@ -79,7 +79,7 @@ Desired outcomes:
 6. **A smooth migration from ES5 to ES6+.**
    This architecture should feel correct in a future world in which native ES6+
    and web components are everywhere, but also be usable today in older ES5
-   browsers and with polyfills.
+   browsers (IE 11) using polyfills and a transpiler.
 
 Non-goals:
 
