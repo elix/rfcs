@@ -176,11 +176,12 @@ get/set, and that are automatically kept in sync:
 
 * `selectedIndex`. This is the zero-based index of the currently selected item
   within the `items` collection. If there is no selection, `selectedIndex` is -1.
-  When this property changes, the mixin raises a `selected-index-changed` event.  
+  When this property changes as a result of internal component activity, the
+  mixin raises a `selected-index-changed` event.
 * `selectedItem`. This is a reference to the currently selected
   HTMLElement in the `items` collection. If there is no selection,
-  `selectedItem` is null. When this property changes, the mixin raises a
-  `selected-item-changed` event.
+  `selectedItem` is null. When this property changes as a result of internal
+  component activity, the mixin raises a `selected-item-changed` event.
 
 Updating one of these properties also updates the other, as shown in the first
 `SimpleList` example at the beginning of this document. Setting either property
@@ -316,11 +317,11 @@ Two properties track whether the `selectNext` and `selectPrevious` methods are
 available:
 
 * `canSelectPrevious`. This is true if the `selectPrevious` method can be
-  called. When this property changes, the mixin raises a
-  `can-select-previous-changed` event.
+  called. When this property changes as a result of internal component activity,
+  the mixin raises a `can-select-previous-changed` event.
 * `canSelectNext`. This is true if the `selectNext` method can be called.
-  When this property changes, the mixin raises a `can-select-next-changed`
-  event.
+  When this property changes as a result of internal component activity, the
+  mixin raises a `can-select-next-changed` event.
 
 These properties are useful for components that want to offer the user, e.g.,
 Next/Previous buttons to move the selection. The properties above can be
