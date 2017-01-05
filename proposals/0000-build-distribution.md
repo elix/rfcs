@@ -4,11 +4,17 @@
 
 # Summary
 
-This RFC describes the proposed model for distributing Elix web components based on a monorepo repository structure. The document illustrates the key aspects of the monorepo file folder hierarchy, pertinent package.json files, how Elix is registered with npm, what an installed Elix distribution file folder tree looks like in an installed client's node_module folder, and how Elix elements are referenced in client web applications.
+This RFC describes the proposed model for distributing Elix web components as a single package of multiple components. This differs from the currently common approach, as exemplified by Polymer elements and other element collections, of distributing multiple packages of individual components.
+
+The document illustrates the key aspects of the Elix repository (a monorepo) file folder hierarchy, pertinent package.json files, how Elix is registered with npm, what an installed Elix distribution file folder tree looks like in an installed client's node_module folder, and how Elix elements are referenced in client web applications.
 
 # Motivation
 
 Elix is a library of web components based on a shared code base of mixin classes. The Elix project suggests that a common heritage of web components - sharing UI/UX standards, look and feel, and Gold Standard quality levels - will become a broader dependency for web application clients than individually selected components chosen from a wide range of providers. Elix is in part a statement about web component ecosystems, emphasizing the _collection_ of components over the cherry-picking selection of individual components.  
+
+A prototype precursor to the Elix library contains several components built on a large set of mixins. When we examine the library's prototype carousel and list box components, we find that each is roughly 94% mixin code. We also find that about 50% of the code of these two components are the exact same mixins. Another 44% of the code are mixins used by one of those two components, but not the other. The conclusion is that factoring components into separate packages doesn't save as much space as you might anticipate.
+
+The world of ES modules will shift web development away from pre-built packages and towards smarter build tools that include just the code a project is actually using. Putting all components in a single package may result in a larger install size on the developer's machine, such as the application server, but in exchange, developers have a simpler configuration experience in the application's package.json.
 
 When you accept the premise of Elix as a library, along with the development efficiencies of organizing a project as a monorepo, then it becomes clear that distribution becomes a matter of installing the full Elix library on an application server, rather than individually installing separate components. This is especially true given the mixin-based architecture of Elix, where the bulk of the code is implemented in shared mixins rather than in the individual components themselves.  
 
@@ -77,7 +83,7 @@ This is an example of the dependencies section of an Elix client application's _
 
     {
       dependencies: {
-        “elix”: “^1.0.0”,
+        “@elix/elix”: “^1.0.0”,
         “other-app-dependency”: “^3.2.1”
       }
     }
@@ -106,7 +112,11 @@ Upon invoking an npm or Yarn install of Elix, the client application's _node_mod
 
 ### Client index.html
 
-Based on the npm or Yarn installation of Elix, a client application will reference definitions for desired Elix elements in the following manner. The primary example shows reference to ES5-transpiled files, with examples for referencing ES2015 definitions immediately following.
+Based on the npm or Yarn installation of Elix, a client application will reference definitions for desired Elix elements in the following manner. The primary example shows reference to ES5-transpiled files, with examples for referencing ES2015 definitions immediately following.  
+
+Note that directly including transpiled files is recommended only for ES5 applications using one or at most a tiny handful of Elix components. Each distribution file will contain complete copies of all the mixins used by that corresponding component, so there will be a lot of redundancy between them. This is for path reference illustration purposes.
+
+Also note that the script tags below would set the attribute, type="module". We exclude it here for readability.
 
     <!DOCTYPE html>
     <html lang="en">
@@ -131,7 +141,7 @@ Based on the npm or Yarn installation of Elix, a client application will referen
 
 Drawbacks include:
 
-1. Search within npm for an elix-* component name may be difficult or impossible.
+1. Search within npm for an elix-* component name may be currently impossible. Note that this is an existing problem with other elements, where a component package registered with npm may include several components, but only the title component can be searched for. We may want to lobby beta.webcomponents.org for a general solution to this problem.
 2. There is a common developer perspective that individual web components are to be registered with npm rather than collections of components. This approach is a relatively new and opinionated model.
 3. Versioning is applied to the entire collection of web components. While this may be exactly the right way to version collections of components, developers may need to be educated as to the underlying (mixin-based) architecture of the component collection in order to understand the reasons for the common versioning model.
 
@@ -181,7 +191,7 @@ This is an example of one element's _package.json" files, which gets registered 
       "license": "MIT",
       "repository": "https://github.com/elix/elix/tree/master/elements/elix-element-1/package”,
       “dependencies”: {
-        “elix”: “1.0.0”
+        “@elix/elix”: “1.0.0”
       }
     }
 
@@ -191,8 +201,8 @@ A client application's _package.json_ file includes the specific Elix elements i
 
     {
       dependencies: {
-        “elix-element-1”: “^1.0.0”,
-        “elix-element-2”: “^1.0.0”,
+        “@elix/elix-element-1”: “^1.0.0”,
+        “@elix/elix-element-2”: “^1.0.0”,
         “other-app-dependency”: “^3.2.1”
       }
     }
@@ -290,7 +300,7 @@ Without the developer convenience of an element redirection JavaScript file, the
       "license": "MIT",
       "repository": "https://github.com/elix/elix/tree/master/elements/elix-element-1/package”,
       “dependencies”: {
-        “elix-mixins”: “1.0.0”
+        “@elix/elix-mixins”: “1.0.0”
       }
     }
 
@@ -298,8 +308,8 @@ Without the developer convenience of an element redirection JavaScript file, the
 
     {
       dependencies: {
-        “elix-element-1”: “^1.0.0”,
-        “elix-element-2”: “^1.0.0”,
+        “@elix/elix-element-1”: “^1.0.0”,
+        “@elix/elix-element-2”: “^1.0.0”,
         “other-app-dependency”: “^3.2.1”
       }
     }
