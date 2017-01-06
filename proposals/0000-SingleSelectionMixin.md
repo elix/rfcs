@@ -1,6 +1,6 @@
 - Start Date: 2016-11-22
 - RFC PR: https://github.com/elix/rfcs/pull/2
-- Elix Issues: (leave this empty)
+- Elix Issues: https://github.com/elix/elix/pull/2 (implementation PR)
 
 # Summary
 
