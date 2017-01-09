@@ -156,7 +156,7 @@ We illustrate two alternatives to the single Elix package distribution model:
 
 This model varies from the proposed model only in that _package.json_ files are specified for each Elix element under the _elements_ folder. Each _element_ folder contains a _package_ folder that contains a _package.json_ file for the particular element. By adding a _package_ folder, we can register a minimal source tree -- essentially only the element's _package.json_ file -- with npm for each element. The _package.json_ file simply points to the Elix unified package as its dependency.
 
-All this model provides over the proposed model is the ability to search for specific Elix elements in the npm registry. The same unified Elix package is installed once for any client application using this distribution model.
+What this model provides over the proposed model is the ability to search for specific Elix elements in the npm registry. The same unified Elix package is installed once for any client application using this distribution model. This follows a strategy used by lodash for publishing individual function references within a single package, as pointed out by John Riviello (@johnriv) in the 9 January 2017 Elix Core Team meeting.
 
 ###Repository structure
 
