@@ -20,6 +20,14 @@ When you accept the premise of Elix as a library, along with the development eff
 
 Elix's distribution strategy is an efficient and opinionated model for building, distributing, installing, and accessing web components. The kernel of this opinionated model boils down to this: Only one package is registered with npm, and that is the full Elix package itself.
 
+##Regarding search and discoverability
+The new webcomponents.org cataloging system provides opportunities for discovering multiple related elements through search. The toolset allows describing collections of elements in a couple of ways:
+
+- Collections of elements can be defined through a bower.json array of dependencies
+- Within a single repository, several elements can be exposed by listing them as an array under the `main` key.
+
+Both mechanisms tap into the system's search index, allowing for searching based on individual element names that will surface the element individually, within its Collection(s), or as one of many elements in a single repository.
+
 # Use cases
 
 This RFC covers, from a client web application's perspective, how Elix components are implicitly registered through the Elix package with npm, and how they are installed and accessed under an application's node_module folder.
