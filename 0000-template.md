@@ -2,10 +2,12 @@
 - RFC PR: (leave this empty)
 - Elix Issues: (leave this empty)
 
+
 # Summary
 
 Concise (roughly one paragraph) explanation of the feature.
 Include a representative code snippet if it's short and self-explanatory.
+
 
 # Motivation
 
@@ -13,9 +15,11 @@ What forces are driving us to do this?
 What are the desired outcomes?
 What are *not* goals?
 
+
 # Use cases
 
 What use cases does it support?
+
 
 # Detailed design
 
@@ -25,6 +29,7 @@ implementation to implement. This should get into specifics and corner-cases,
 and include examples of how the feature is used. Any new terminology should be
 defined here.
 
+
 # Drawbacks
 
 Why should we *not* do this? There are tradeoffs to choosing any path, please
@@ -32,9 +37,11 @@ attempt to identify them here. Consider the impact on the integration of this
 feature with other existing and planned features, on the impact of the API churn
 on existing apps, etc.
 
+
 # Alternatives
 
 What other designs have been considered? What is the impact of not doing this?
+
 
 # Unresolved questions
 
