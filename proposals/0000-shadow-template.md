@@ -1,5 +1,5 @@
 - Start Date: 2017-01-12
-- RFC PR: (leave this empty)
+- RFC PR: https://github.com/elix/rfcs/pull/5
 - Elix Issues: (leave this empty)
 
 
