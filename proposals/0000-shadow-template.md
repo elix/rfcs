@@ -89,8 +89,8 @@ template to a real `<template>`.
 
 The template can come from anywhere. It can be embedded in the JavaScript as a
 backquoted template string (as shown in the Summary example), or it be loaded
-from some other resource. E.g., if HTML Imports are used, the template can be
-obtained from the same import in which the class is defined:
+from some other resource. E.g., if HTML Imports are used, the template could be
+obtained from the same HTML file in which the class is defined:
 
     <template>
       Hello, <slot></slot>!
@@ -104,6 +104,9 @@ obtained from the same import in which the class is defined:
         }
       }
     </script>
+
+_Note: The above code is theoretical, as it does not answer the question of how
+to perform a JavaScript `import` in an HTML Import._
 
 
 ## Template caching
