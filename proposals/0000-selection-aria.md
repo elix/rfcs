@@ -23,7 +23,7 @@ Example:
     }
     customElements.define('accessible-list', AccessibleList);
 
-If the DOM initially contains:
+Suppose the developer initially populates the DOM as follows:
 
     <accessible-list aria-label="Fruits" tabindex="0">
       <div>Apple</div>
@@ -31,10 +31,11 @@ If the DOM initially contains:
       <div>Cherry</div>
     </accessible-list>
 
-and the first item is selected programmatically, the new state will be:
+After the element is added to the page, and the first item is selected. The
+resulting DOM state will then be:
 
     <accessible-list aria-label="Fruits" tabindex="0" role="listbox"
-    aria-activedescendant="_option0">
+        aria-activedescendant="_option0">
       <div role="option" id="_option0" aria-selected="true">Apple</div>
       <div role="option" id="_option1" aria-selected="false">Banana</div>
       <div role="option" id="_option2" aria-selected="false">Cherry</div>
@@ -141,17 +142,17 @@ the page:
     // Letting the mixin pick the role.
     const tabList = new TabList();
     document.appendChild(tabList);
-    tabList.getAttribute('role'); // "listbox", the default
+    tabList.getAttribute('role'); // "tablist" (this component's default role)
 
     // Handling role on a per-element basis.
     const menu = new TabList();
     tabList.setAttribute('role', 'menu');
     document.appendChild(tabList);
-    tabList.getAttribute('role')  // "menu", since mixin left the role alone.
+    tabList.getAttribute('role')  // "menu" (mixin left the role alone).
 
 The `itemRole` default is applied in the `[symbols.itemAdded]` method, which
-the component's implementation must invoke when new items are added. (That
-responsibility will typically be handled by another mixin to be designed later.)
+the component's implementation must invoke when new items are added. That
+responsibility will typically be handled by a mixin to be designed later.
 
 
 ## `id` attribute on the items
@@ -188,7 +189,15 @@ To let ARIA know which item is selected, the component must set its own
 ARIA defines an `aria-selected` attribute that should be set to `true` on the
 currently-selected item, and `false` on all other items.
 
-* The mixin sets `aria-selected` to `false` for all new items.
+* The mixin sets `aria-selected` to `false` for all new items. This is required
+  to adhere to the ARIA spec for roles like
+  [tab](https://www.w3.org/TR/wai-aria-1.1/#tab): "inactive tab elements
+  [should] have their `aria-selected` attribute set to `false`". That is, it is
+  insufficient for an element to omit the `aria-selected` attribute; it must
+  exist and be set to `false`. This incurs a performance penalty, as every item
+  must be touched by the mixin, but
+  [real-world experience](https://github.com/PolymerElements/paper-tabs/issues/176)
+  indicates that screen readers do exist which require this behavior.
 * When an item's selection state changes, `SelectionAriaMixin` reflects
   its new state in its `aria-selected` attribute. This is done in the
   `[symbols.itemSelected]` method, which is automatically invokes by
