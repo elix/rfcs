@@ -47,7 +47,7 @@ attributes `role`, `id`, `aria-activedescendant`, and `aria-selected`.
 In practice, some additional attributes must be set for ARIA to be useful. The
 `aria-label` attribute is context-dependent and must be set by the author. In
 this example, a `tabindex` of 0 is also specified, although a planned mixin for
-general keyboard support can take care of providing a default `tabindex` value.)
+general keyboard support can take care of providing a default `tabindex` value.
 
 
 # Motivation
