@@ -1,4 +1,4 @@
-- Start Date: (fill me in with today's date, YYYY-MM-DD)
+- Start Date: 2017-01-03
 - RFC PR: (leave this empty)
 - Elix Issues: (leave this empty)
 
@@ -39,6 +39,8 @@ In this and the [Alternatives](#alternatives) sections, we'll illustrate what th
 ## Single Elix registered package
 
 Under this distribution model, we look at the Elix repository as a unified JavaScript library of web components and associated, supporting mixin classes. A dependent application will use npm or Yarn to install the full library to its server, and reference web components from within that installed folder structure. An application under this model has a single dependency: the Elix package which itself has been registered with npm.
+
+Since Elix is registered as a single package, its elements and mixins together, we consider versioning to encompass that single package. In that sense, all elements and mixins are versioned in lockstep. A change to a single mixin infers a version change to the package as a whole, especially since that mixin may be consumed by several or all elements in the package.
 
 ###Repository structure
 
@@ -129,9 +131,9 @@ Also note that the script tags below would set the attribute, type="module". We 
     <!DOCTYPE html>
     <html lang="en">
     <head>
-      <script src=“./node_modules/elix/elements/ElixElement1/dist/elix-element-1.js">
+      <script src=“./node_modules/elix/elements/elix-element-1/dist/elix-element-1.js">
       </script>
-      <script src=“./node_modules/elix/elements/ElixElement2/dist/elix-element-2.js”>
+      <script src=“./node_modules/elix/elements/elix-element-2/dist/elix-element-2.js”>
       </script>
     </head>
     <body>
@@ -142,14 +144,14 @@ Also note that the script tags below would set the attribute, type="module". We 
 
 #### ES2015 script references
 
-    <script src=“./node_modules/elix/elements/ElixElement1/src/ElixElement1.js”></script>
-    <script src=“./node_modules/elix/elements/ElixElement2/src/ElixElement2.js”></script>
+    <script src=“./node_modules/elix/elements/elix-element-1/src/ElixElement1.js”></script>
+    <script src=“./node_modules/elix/elements/elix-element-2/src/ElixElement2.js”></script>
     
 # Drawbacks
 
 Drawbacks include:
 
-1. Search within npm for an elix-* component name may be currently impossible. Note that this is an existing problem with other elements, where a component package registered with npm may include several components, but only the title component can be searched for. We may want to lobby beta.webcomponents.org for a general solution to this problem.
+1. Search within npm for an elix-* component name may be currently impossible. Note that this is an existing problem with other elements, where a component package registered with npm may include several components, but only the title component can be searched for. We may want to lobby webcomponents.org for a general solution to this problem.
 2. There is a common developer perspective that individual web components are to be registered with npm rather than collections of components. This approach is a relatively new and opinionated model.
 3. Versioning is applied to the entire collection of web components. While this may be exactly the right way to version collections of components, developers may need to be educated as to the underlying (mixin-based) architecture of the component collection in order to understand the reasons for the common versioning model.
 
@@ -159,6 +161,8 @@ We illustrate two alternatives to the single Elix package distribution model:
 
 1. The same as the proposed model above, but register Elix elements individually with npm
 2. Separately register and distribute Elix elements and the Elix mixin package
+ 
+Note that with individually registered elements, there is the possibility to version each element separately which would decouple element versioning from the lockstep single version strategy used by the unified Elix package. The difficulty here is managing the changes to mixins and elements such that the appropriate version changes are applied only to those elements/mixins that have changed.
 
 ## Proposed model with npm registration of individual elements
 
@@ -250,9 +254,9 @@ Without the developer convenience of an element redirection JavaScript file, the
     <!DOCTYPE html>
     <html lang="en">
     <head>
-      <script src=“./node_modules/elix/elements/ElixElement1/dist/elix-element-1.js">
+      <script src=“./node_modules/elix/elements/elix-element-1/dist/elix-element-1.js">
       </script>
-      <script src=“./node_modules/elix/elements/ElixElement2/dist/elix-element-2.js”>
+      <script src=“./node_modules/elix/elements/elix-element-2/dist/elix-element-2.js”>
       </script>
     </head>
     <body>
@@ -263,8 +267,8 @@ Without the developer convenience of an element redirection JavaScript file, the
 
 #### ES2015 script references
 
-    <script src=“./node_modules/elix/elements/ElixElement1/src/ElixElement1.js”></script>
-    <script src=“./node_modules/elix/elements/ElixElement2/src/ElixElement2.js”></script>
+    <script src=“./node_modules/elix/elements/elix-element-1/src/ElixElement1.js”></script>
+    <script src=“./node_modules/elix/elements/elix-element-2/src/ElixElement2.js”></script>
 
 ## Register individual elements and the elix-mixin package
 ### Repository structure
