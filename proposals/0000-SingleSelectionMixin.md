@@ -64,7 +64,13 @@ Non-goals:
   prototyped, the mixin could actually be used to track selection of other
   objects. Unless it is desirable to preserve that flexibility, however, it will
   be treated as a non-goal. Note that most other Elix mixins that deal with
-  selection will assume that selectable items are, in fact, HTMLElement instances.
+  selection will assume that selectable items are, in fact, HTMLElement
+  instances.
+* The mixin is not intended at this point for use with infinite sets (such as
+  dates in time) or virtualized item collections (e.g., lazy-loaded items in
+  large lists). Among other things, the mixin needs to be able to inspect the
+  `length` of, and invoke `indexOf` on, the array of items in a performant
+  manner.
 
 
 # Use cases
