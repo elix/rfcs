@@ -44,8 +44,9 @@ Providing great [Keyboard
 Support](https://github.com/webcomponents/gold-standard/wiki/Keyboard-Support)
 is a critical Gold Standard checklist item for enabling universal access. It is
 also, notably, an area where web developers have historically under-invested.
-This can disappoint users of web application, who may be surprised or frustrated
-that web UI elements do not measure up to their client OS equivalents.
+This can disappoint users of a web application, who may be surprised or
+frustrated that web UI elements do not measure up to their client OS
+equivalents.
 
 Desired outcomes:
 
@@ -154,7 +155,7 @@ is invoked:
 * `symbols.goEnd` → `selectLast`
 * `symbols.goLeft` → `selectPrevious`
 * `symbols.goRight` → `selectNext`
-* `symbols.goStart` → `selectEnd`
+* `symbols.goStart` → `selectFirst`
 * `symbols.goUp` → `selectPrevious`
 
 A common use of `DirectionSelectionMixin` will be to connect the `KeyboardMixin`
@@ -196,7 +197,7 @@ closest ancestor of that slot that has `overflow: auto` or `overflow: scroll`.
 If no such element is found, the component itself will be assumed to be the
 scrollable element.
 
-A compnent can also explicitly indicate which of its shadow subtree elements
+A component can also explicitly indicate which of its shadow subtree elements
 should be scrolled by defining a property called `symbols.scrollTarget` that
 returns the desired element.
 
