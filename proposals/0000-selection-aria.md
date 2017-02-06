@@ -31,8 +31,17 @@ Suppose the developer initially populates the DOM as follows:
       <div>Cherry</div>
     </accessible-list>
 
-After the element is added to the page, and the first item is selected. The
-resulting DOM state will then be:
+After the element is added to the page, the DOM result will be:
+
+    <accessible-list aria-label="Fruits" tabindex="0" role="listbox">
+      <div role="option" id="_option0" aria-selected="false">Apple</div>
+      <div role="option" id="_option1" aria-selected="false">Banana</div>
+      <div role="option" id="_option2" aria-selected="false">Cherry</div>
+    </accessible-list>
+
+The `SelectionAriaMixin` has selected appropriate default values for the
+attributes `role`, `id`, `aria-selected`. When the first item is selected, the
+DOM will update to:
 
     <accessible-list aria-label="Fruits" tabindex="0" role="listbox"
         aria-activedescendant="_option0">
@@ -41,13 +50,14 @@ resulting DOM state will then be:
       <div role="option" id="_option2" aria-selected="false">Cherry</div>
     </accessible-list>
 
-The `SelectionAriaMixin` has selected appropriate default values for the
-attributes `role`, `id`, `aria-activedescendant`, and `aria-selected`.
+`SelectionAriaMixin` has updated the `aria-selected` attribute of the selected
+item, and reflected this at the list level with `aria-activedescendant`.
 
 In practice, some additional attributes must be set for ARIA to be useful. The
-`aria-label` attribute is context-dependent and must be set by the author. In
-this example, a `tabindex` of 0 is also specified, although a planned mixin for
-general keyboard support can take care of providing a default `tabindex` value.
+author should specific a meaningful, context-dependent label for the element
+with an `aria-label` or `aria-labeledby` attribute. In this example, a
+`tabindex` of 0 is also specified, although a planned mixin for general keyboard
+support can take care of providing a default `tabindex` value.
 
 
 # Motivation
