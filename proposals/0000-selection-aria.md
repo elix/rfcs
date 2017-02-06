@@ -86,6 +86,11 @@ Non-goals:
   now its is focused on single-selection, as represented in
   `SingleSelectionMixin`. When Elix develops a mixin for multi-selection, we
   should ensure that `SelectionAriaMixin` is updated to work with that.
+* This mixin does not update the selection in response to keyboard activity.
+  Component authors must provide their own keyboard handling that sets the
+  `selectedItem` property whenever the user changes the selection with the
+  keyboard. To make that easy, a separate Elix mixin will address that specific
+  need.
 
 
 # Use cases
