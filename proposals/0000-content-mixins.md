@@ -97,15 +97,6 @@ invoke a method called `symbols.shadowCreated` after the component's shadow
 root has been created and populated. This allows the mixin to inspect the
 shadow subtree for `slot` elements, and listen to their `slotchange` events.
 
-Note: This mixin relies upon the browser firing `slotchange` events when the
-contents of a `slot` change. Safari and the polyfills fire this event when a
-custom element is first upgraded, while Chrome does not (it appears to only fire
-the event when a slot's initial assignement of elements changes). This mixin
-always invokes the `contentChanged` method after component instantiation so that
-the method will always be invoked at least once. However, on Safari (and
-possibly other browsers), `contentChanged` might be invoked _twice_ for a new
-component instance. See "Unresolved questions", below.
-
 
 ## ContentItemsMixin
 Mixin which maps content semantics (elements) to list item semantics.
@@ -245,15 +236,3 @@ As with most Elix mixins, we could decide to have each component define its own
 means of retrieving content and filtering out the useful items. However, the
 needs here appear to be so consistent that it would be cumbersome to manage this
 on a per-component basis.
-
-
-# Unresolved questions
-
-As noted in the section on `ChildrenContentMixin`, a browser discrepancy
-regarding the raising of the initial `slotchange` event complicates the mixin's
-ability to consistently invoke `symbols.contentChanged`. Further investigation
-is required to isolate the problem and file bugs with the affected browsers or
-on the relevant web spec. In the meantime, it would be beneficial if we could
-find a way for `ChildrenContentMixin` to normalize invocation of
-`symbols.contentChanged` so that it only happens once. That may be challenging,
-however.
