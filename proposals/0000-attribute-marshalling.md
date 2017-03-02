@@ -80,8 +80,8 @@ camelCase property name and invoking the indicated property setter.
 Attributes can only have string values, so a string value is what is passed to
 the property setter. If you'd like to convert string attributes to other types
 (numbers, booleans), you must implement parsing yourself in the property setter.
-For example, the following code implements a property that can be set as
-either a Boolean or a string representing a Boolean:
+For example, the following code implements a Boolean property that can be set as
+either: a) a Boolean value or b) a string representing a Boolean value:
 
     get fooBar() {
       return this[fooBarSymbol];
@@ -155,11 +155,11 @@ The helper functions are:
    document yet, the class value is enqueued for later application by invoking
    `connected`.
 
- * `writePendingAttributes`: This should be invoked in the component's
-   `connectedCallback` to apply any pending attribute or class updates. This
-   can also be invoked directly if it is known that the constructor has already
-   completed. It is safe to invoke this method more than once; subsequent
-   invocations have no effect.
+* `writePendingAttributes`: This should be invoked in the component's
+  `connectedCallback` to apply any pending attribute or class updates. This can
+  also be invoked directly if it is known that the constructor has already
+  completed. It is safe to invoke this method more than once; subsequent
+  invocations have no effect.
 
 These helpers are provided for the benefit of developers that want to use them
 directly. The `AttributeMarshallingMixin` makes use of them in its
@@ -169,8 +169,13 @@ can use those instead.
 
 # Drawbacks
 
-There are not many drawbacks to pursuing this work. There may be cases where a
-component's attribute handling is too complex for `AttributeMarshallingMixin`
-and the `attributes` helpers, but in such cases, a developer is free to dispense
-with this mixin and handle `attributeChangedCallback` and `observedAttributes`
-themselves.
+This mixin enumerates a component's property setters when the browser requests
+the value of `observedAttributes` at component registration time. This isn't
+necessarily expensive, but is nevertheless work that might not need to be
+performed if a given application never makes use of attributes, or only sets
+specific attributes.
+
+There may be cases where a component's attribute handling is too complex for
+`AttributeMarshallingMixin` and the `attributes` helpers, but in such cases, a
+developer is free to dispense with this mixin and handle
+`attributeChangedCallback` and `observedAttributes` themselves.
