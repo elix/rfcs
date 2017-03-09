@@ -8,8 +8,9 @@
 This RFC proposes two mixins and a package of helper functions for components
 that want to programmatically inspect or manipulate their own contents:
 
-* **ChildrenContentMixin**.
-  Defines a component's content as its children, flattening any `slot` elements.
+* **DefaultSlotContentMixin**.
+  Defines a component's content as the nodes assigned its default (unnamed)
+  slot.
 * **ContentItemsMixin**.
   Lets a component treat its content as items in a list.
 * **content** helper functions.
@@ -49,7 +50,7 @@ Desired outcomes:
 
 # Use cases
 
-`ChildrenContentMixin` is aimed at components intended to contain light DOM
+`DefaultSlotContentMixin` is aimed at components intended to contain light DOM
 children. For a general-purpose library like Elix, that includes most of the
 project's envisioned components.
 
@@ -60,21 +61,24 @@ be extracted from the component's light DOM children.
 
 # Detailed design
 
-## ChildrenContentMixin
+## DefaultSlotContentMixin
 
 This mixin defines a property called `symbols.content` that returns all
-elements assigned to the component, including elements assigned to slots.
+nodes assigned to the component's default (unnamed) slot. This implies the
+component has created a shadow subtree which includes such a slot; a console
+warning is emitted if no such slot is found.
 
 This also provides notification of changes to the component's `symbols.content`
 property. It will invoke a `symbols.contentChanged` method when the component is
-first instantiated, and whenever the elements assigned to its slot(s) change.
-This is intended to satisfy the Gold Standard checklist item for monitoring
-[Content Changes](https://github.com/webcomponents/gold-standard/wiki/Content-Changes).
+first instantiated, and whenever the elements assigned to its default slot
+change. This is intended to satisfy the Gold Standard checklist item for
+monitoring [Content
+Changes](https://github.com/webcomponents/gold-standard/wiki/Content-Changes).
 
 Example:
 
 ```
-class CountingElement extends ChildrenContentMixin(HTMLElement) {
+class CountingElement extends DefaultSlotContentMixin(HTMLElement) {
 
   constructor() {
     super();
@@ -99,13 +103,14 @@ shadow subtree for `slot` elements, and listen to their `slotchange` events.
 
 
 ## ContentItemsMixin
-Mixin which maps content semantics (elements) to list item semantics.
 
-Items differ from element contents in several ways:
+Mixin which maps content semantics to list item semantics. Items differ from
+element contents in several ways:
 
 * They are often referenced via index.
 * They may have a selection state.
 * It's common to do work to initialize the appearance or state of a new item.
+* Text nodes (which are often whitespace) are ignored.
 * Invisible child elements are filtered out and not counted as items.
   Instances of invisible `Node` subclasses such as `Comment` and
   `ProcessingInstruction` are filtered out, as are invisible auxiliary elements
@@ -114,9 +119,9 @@ Items differ from element contents in several ways:
   being treated as list items.
 
 This mixin expects a component to provide a `symbols.content` property returning
-a raw set of elements. This can be done with `ChildrenContentMixin` (above), or
-defined by hand. A component could, for example, define `symbols.content` to
-only extract elements assigned to a particular `slot`. For a list-like component
+a raw set of elements. This can be done with `DefaultSlotContentMixin` (above),
+or defined by hand. A component could, for example, define `symbols.content` to
+only extract nodes assigned to a particular `slot`. For a list-like component
 whose list items are hard-coded, the component could define `symbols.content` to
 return the children of an element inside the component's shadow subtree.
 
@@ -138,9 +143,9 @@ that would not normally be visible to the user. Example:
     </my-element>
 
 If this element uses `ContentItemsMixin`, its `items` property will return the
-three `div` elements, and filter out the invisible `style` element. This
-filtering is done through the `content` helper function, `assignedChildren`
-(below).
+three `div` elements, and filter out the text nodes and the invisible `style`
+element. This filtering is done through the helper function
+`content.substantiveElements` (below).
 
 To allow a component to initialize items, the mixin implements a handler for
 `symbols.itemsChanged` that invokes `symbols.itemAdded` for any new items added
@@ -153,55 +158,27 @@ request, this mixin supports an optimized mode. If the method
 notify it of future content changes, and turns on the optimization. In that
 mode, the mixin saves a reference to the computed set of items, and will return
 that immediately on subsequent calls to the `items` property. If this mixin is
-used in conjunction with `ChildrenContentMixin` (above), the latter will take
+used in conjunction with `DefaultSlotContentMixin` (above), the latter will take
 care of automatically invoking `symbols.contentChanged`, and automatically
 engage the optimization.
 
 
 ## content helpers
 
-This is a collection of helper functions for accessing a component's distributed
-children as a flattened array or string. These helpers are used by mixins such
-as `ContentItemsMixin` (above), but also provided to component authors who want
-to define component content in other ways.
+This is a collection of helper functions for accessing a component's content.
+For now, this provides a the following helper function:
 
-The standard DOM API provides several ways of accessing child content:
-`children`, `childNodes`, and `textContent`. None of these functions are Shadow
-DOM aware. This mixin defines corresponding variations of those functions that
-*are* Shadow DOM aware:
+* `substantiveElements`: given a `NodeList` or `Array` of Nodes, this
+  returns only those Elements that can typically be seen by a user.
 
-* `assignedChildren`: a Shadow DOM-aware variant of `children`
-* `assignedChildNodes`: a Shadow DOM-aware variant of `childNodes`
-* `assignedTextContent`: a Shadow DOM-aware variant of `textContent`
+The above filters out:
 
-Example: The following component counts its children in a Shadow DOM-aware way,
-taking into account all nodes assigned to the component's `slot`:
-
-    import { assignedChildren } from '.../content';
-
-    class CountChildren extends HTMLElement {
-      constructor() {
-        super();
-        const root = this.attachShadow({ mode: 'open' });
-        root.innerHTML = `<slot></slot>`;
-      }
-      get count() {
-        return assignedChildren(this).length;
-      }
-    }
-
-This mixin provides an additional helper function:
-
-* `filterAuxiliaryElements`: given a `NodeList` or `Array` of nodes, this
-  returns only those objects that can typically be seen by a user.
-
-The above filters out two kinds of objects that cannot normally be seen:
-
-1. Invisible `Node` subclasses like `Comment` and `ProcessingInstruction`.
-2. Elements that can appear in the document body, but which typically have no
+1. Text nodes
+2. Invisible `Node` subclasses like `Comment` and `ProcessingInstruction`.
+3. Elements that can appear in the document body, but which typically have no
    user-visible manifestation.
 
-The second criteria is achieved through use of a blacklist. Consulting the list
+The third criteria is achieved through use of a blacklist. Consulting the list
 of [all HTML elements](https://developer.mozilla.org/en-US/docs/Web/HTML/Element),
 the blacklist of invisible auxiliary elements appears to be:
 
