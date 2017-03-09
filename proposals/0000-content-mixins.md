@@ -166,7 +166,7 @@ engage the optimization.
 ## content helpers
 
 This is a collection of helper functions for accessing a component's content.
-For now, this provides a the following helper function:
+For now, this provides the following helper function:
 
 * `substantiveElements`: given a `NodeList` or `Array` of Nodes, this
   returns only those Elements that can typically be seen by a user.
