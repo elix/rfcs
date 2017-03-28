@@ -86,10 +86,11 @@ allow a UI to offer more controls than can fit in a confined area at a time.
   other looks are possible.
 * Tabs may also be used in a main window to downplay less-commonly used aspects
   of a UI.
-* Tabs are also an extremely navigation model. Many mobile applications present
-  a navigation toolbar that behave like tabs, presenting 3–5 buttons that
-  correspond to the app's main areas. In navigation use cases, the tab buttons
-  typically have a toolbar button style rather than a classic tabbed appearance.
+* Tabs are also an extremely common navigation model. Many mobile applications
+  present a navigation toolbar that behave like tabs, presenting 3–5 buttons
+  that correspond to the app's main areas. In navigation use cases, the tab
+  buttons typically have a toolbar button style rather than a classic tabbed
+  appearance.
 
 The `Tabs` and `LabeledTabs` components assume a standard tabbed UI design in
 which clicking a tab immediately makes the corresponding tab panel visible. To
@@ -143,7 +144,7 @@ button to the `aria-label` attribute of the corresponding panel.
 
 A `TabStrip` exposes two properties:
 
-* `tabAlign`: determines where how the tab buttons will be aligned in the strip:
+* `tabAlign`: determines how the tab buttons will be aligned in the strip:
   "start" (typically left), "center", "end" (typically right), or "stretch." The
   values "start" and "end" are used instead of "left" and "right" to accommodate
   pages in right-to-left languages such as Arabic and Hebrew.
