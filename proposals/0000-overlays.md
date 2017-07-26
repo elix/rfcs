@@ -735,6 +735,8 @@ Demo: https://janmiksovsky.github.io/elix/demos/responsiveDrawer.html
 
 A user click/tap on the drawer’s backdrop implicitly dismisses the drawer. (Compare with `Dialog`, where backdrop clicks are ignored.)
 
+Elix plans to eventually add touch gestures to Drawer so that users can close it (and possibly open it) with a swipe.
+
 
 # Popup
 
@@ -764,7 +766,7 @@ This property specifies in milliseconds how long a toast should remain open befo
 
 To support interactivity within a toast, the timer is disabled if the user moves the mouse inside the toast or taps within it. When/if the user later moves the mouse outside the toast, or taps outside it, the timer will be restarted at zero.
 
-Setting `duration` to `null` will disable the timer, allowing the toast to remain open indefinitely.
+Setting `duration` to 0 or `null` will disable the timer, allowing the toast to remain open indefinitely.
 
 
 ## `fromEdge` property
