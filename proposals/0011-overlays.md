@@ -1,6 +1,6 @@
 - Start Date: 2017-07-12
-- RFC PR: (leave this empty)
-- Elix Issues: (leave this empty)
+- RFC PR: https://github.com/elix/rfcs/pull/11
+- Elix code PR: (leave this empty)
 
 # Summary
 
