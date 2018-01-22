@@ -5,15 +5,15 @@
 
 # Summary
 
-Build an enhanced version of the <img> tag, the <eix-img> and provide features that mainly improve performance.
-The usage will be compatible to the standard HTML element <img>, so it can be a drop-in replacement.
+Build an enhanced version of the `<img>` tag, the `<eix-img>` and provide features that mainly improve performance.
+The usage will be compatible to the standard HTML element `<img>`, so it can be a drop-in replacement.
 Just use `<elix-img src=whatever.jpg></elix-img>` instead of `<img src=whatever.jpg>`.
 
 
 # Motivation
 
-The use of <img> might have a serious impact on user experience, we want to improve that where possible.
-We want the <elix-img> to improve web page speed and optimize network usage where possible, 
+The use of `<img>` might have a serious impact on user experience, we want to improve that where possible.
+We want the `<elix-img>` to improve web page speed and optimize network usage where possible, 
 without sacrificing but improving the user experience.
 
 It is not a goal to provide enhanced visual features, like text overlay or alike. ???? Opinions requested !!!!
