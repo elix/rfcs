@@ -31,7 +31,11 @@ It is not a goal to provide enhanced visual features, like text overlay or alike
 Features
 1. Lazy-load - Don't download/render anything below the fold
 2. Pre-cache - Pre-cache images below the fold ready for when the user needs them (Look at different ways to do this, Fetch, Cache, native async/decode attribute)
-
+3. Loader - none by default, configurable by attribute and a little CSS (with default styles provided?).
+4. All attributes of native img - see: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img
+5. Various formats - provide best possible format for given browser? E.g. WebP if Chrome detected, with a fallback, perhaps reuse srcset attribute?
+6. Downloadable - via attribute and a little CSS to show Download icon (with default styles provided?). We often do right click and hit download.
+7. Licence - attribute with value to set given licence. Perhaps some CSS to show it (on / off). Attribute itself is just informative.
 ????
 
 
